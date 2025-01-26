@@ -10,7 +10,7 @@ from Logins.models import Logins_model
 def all(request):
     logins_list = Logins_model.objects.all().order_by('status')
     page_number = request.GET.get('page', 1)  # Get the current page number from the request
-    paginator = Paginator(logins_list, 6)  # Paginate with 10 records per page
+    paginator = Paginator(logins_list, 10)  # Paginate with 10 records per page
     page_obj = paginator.get_page(page_number)
 
     return render(request, 'Logins/home.html', context={'page_obj': page_obj})
