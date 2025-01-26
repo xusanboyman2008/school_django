@@ -104,6 +104,11 @@
             transition: opacity 0.3s ease-in-out;
         }
 
+        .form-container.show {
+            display: block;
+            opacity: 1;
+        }
+
         .overlay {
             display: none;
             position: fixed;
@@ -113,6 +118,10 @@
             height: 100%;
             background: rgba(0, 0, 0, 0.5);
             z-index: 5;
+        }
+
+        .overlay.show {
+            display: block;
         }
 
         .form-group {
@@ -288,9 +297,48 @@
         tbody tr:hover {
             background: rgba(0, 123, 255, 0.2); /* Example hover effect */
         }
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 200px;
+            padding: 5px 10px;
+            background-color: #007bff;
+            border-radius: 20px;
+            color: white;
+        }
 
         .toggle-container label {
             font-size: 16px;
+        }
+
+        .toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background-color: #ccc;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        .toggle:before {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background-color: white;
+            border-radius: 50%;
+            transition: 0.3s;
+        }
+
+        .toggle.active {
+            background-color: #28a745;
+        }
+
+        .toggle.active:before {
+            transform: translateX(30px);
         }
     </style>
 </head>
