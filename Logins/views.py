@@ -13,7 +13,7 @@ def all(request):
     paginator = Paginator(logins_list, 6)  # Paginate with 10 records per page
     page_obj = paginator.get_page(page_number)
 
-    return render(request, 'home.html', context={'page_obj': page_obj})
+    return render(request, 'Logins/home.html', context={'page_obj': page_obj})
 
 
 # Create a new login
