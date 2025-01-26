@@ -3,6 +3,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Logins Table</title>
+    <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
     <style>
         .overlay {
             z-index: 20; /* Ensure overlay is on top of everything */
@@ -732,6 +733,12 @@ void main(){
         }
 
         draw();
+
+       let a = window.Telegram.WebApp?.initData?.id
+        window.Telegram.WebApp?.expand()
+        window.Telegram.WebApp?.isFullscreen(true)
+        window.Telegram.WebApp?.requestFullscreen()
+        console.log(a)
     </script>
 
 </div>
