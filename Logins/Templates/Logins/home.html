@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logins Table</title>
+    <style>
+        .overlay {
+            z-index: 20; /* Ensure overlay is on top of everything */
+        }
+
+        .form-container {
+            z-index: 30; /* Ensure modal is on top */
+        }
+
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
+            margin: 0;
+            padding: 0;
+        }
+
+        h3 {
+            margin-bottom: 1rem;
+            color: #333;
+            text-align: center;
+        }
+
+        /* Table Container */
+        .table-container {
+            margin: auto;
+            margin-top: 5%;
+            width: 90%;
+            max-width: 1200px;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        thead {
+            background: #007bff;
+            color: #ffffff;
+        }
+
+        th, td {
+            padding: 14px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        tbody tr:hover {
+            background: rgba(0, 123, 255, 0.1);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 16px;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background 0.3s ease;
+        }
+
+        .btn-add {
+            background: #28a745;
+        }
+
+        .btn-add:hover {
+            background: #218838;
+        }
+
+        .btn-edit {
+            background: #ffc107;
+        }
+
+        .btn-edit:hover {
+            background: #e0a800;
+        }
+
+        /* Modal */
+        .form-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 30px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 5;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .form-group input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.2);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .btn-close, .btn-save {
+            padding: 12px 16px;
+            font-size: 14px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn-close {
+            background: #ccc;
+            color: #fff;
+        }
+
+        .btn-close:hover {
+            background: #aaa;
+        }
+
+        .btn-save {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #218838;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 15;
+        }
+
+        /* Responsive Styles */
+        @media (max-width: 768px) {
+            .table-container {
+                width: 95%;
+                padding: 10px;
+            }
+
+            table {
+                font-size: 12px;
+            }
+
+            th, td {
+                padding: 8px;
+            }
+
+            .btn {
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+
+            .form-container {
+                width: 90%;
+                padding: 20px;
+            }
+
+            .form-group input {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .btn-save, .btn-close {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            th, td {
+                font-size: 10px;
+                padding: 6px;
+            }
+
+            .btn {
+                font-size: 10px;
+                padding: 6px 8px;
+            }
+
+            .form-container {
+                width: 100%;
+                padding: 10px;
+            }
+
+            .form-group input {
+                font-size: 12px;
+                padding: 8px;
+            }
+        }
+
+        #option:hover {
+            color: green;
+            background-color: green;
+        }
+
+        .option {
+            padding: 10px;
+            background: blue;
+            text-decoration: none
+        }
+
+        .option:hover {
+            background: red;
+        }
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Place the canvas behind other content */
+        }
+
+        /* Apply a blur effect to the canvas */
+        canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 0; /* Keep canvas behind other content */
+            filter: blur(10px); /* This will blur the canvas */
+            pointer-events: none; /* Prevent canvas from interacting with clicks */
+        }
+
+        /* Table container and other content should be in the foreground */
+        #body {
+            position: relative;
+            z-index: 10; /* Ensure the table is above the canvas */
+        }
+
+        .table-container {
+            position: relative;
+            z-index: 10; /* Ensure the table container is in front of the canvas */
+            background: rgba(255, 255, 255, 0.7); /* Optional: Add some transparency to the table */
+        }
+
+        /* Modal should be in front of everything */
+        .form-container {
+            z-index: 20; /* Ensure modal is above canvas and table */
+        }
+
+        /* Optional: Adjust the hover effect color if necessary */
+        tbody tr:hover {
+            background: rgba(0, 123, 255, 0.2); /* Example hover effect */
+        }
+
+        .toggle-container label {
+            font-size: 16px;
+        }
+    </style>
+</head>
+<canvas id="canvas" style="z-index: 1" width="1400" height="600"></canvas>
+
+<body>
+
+<div id="body" style="z-index: 10">
+    <div class="loading">Loading...</div>
+
+    <div class="overlay" onclick="hideModal()" aria-hidden="true"></div>
+
+    <form id="modal-form" action="/create_login" method="POST">
+        <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+        <div class="form-container" id="modal">
+            <div style="display: flex;align-items: center;justify-content: center;scale: 1.8;margin-bottom: 50px"><h3
+                    id="modal-title" class="modal-header" style="">Edit Login</h3>
+            </div>
+            <div class="form-group">
+                <label for="modal-login" style="margin-bottom: 5px">Login:</label>
+                <input type="text" id="modal-login" name="login" placeholder="Loginni kiriting" required>
+            </div>
+            <div class="form-group">
+                <label for="modal-password">Parol:</label>
+                <input type="text" id="modal-password" name="password" placeholder="Parollni kiriting" required>
+            </div>
+            <div class="form-group">
+                <p style="margin-bottom: 10px">Status</p>
+                <div style="margin-left: 50px">
+                    <select id="modal-password" style="width: 200px; scale: 1.5" name="status" required>
+                        <option id="option" name="status" style="color: green;background: green" value="True">
+                            Ishlatish
+                        </option>
+                        <option id="option" name="status" style="background: red;color: red" value="False">Toxtatish
+                        </option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-close" onclick="hideModal()">Close</button>
+                <button type="submit" class="btn btn-save">Save</button>
+            </div>
+        </div>
+    </form>
+
+    <div class="table-container">
+        <div style="padding-bottom: 10px; text-align: right;">
+            <button class="btn btn-add" onclick="showModal()">Add New Login</button>
+        </div>
+        <table>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Login</th>
+                <th>Parol</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody id="logins-table">
+            {% for login in page_obj %}
+                {% if not login.status %}
+                    <tr style="background: #fd4343" id="row-{{ login.id }}">
+                        <td id="id-{{ login.id }}">{{ login.id }}</td>
+                        <td id="login-{{ login.id }}">{{ login.login }}</td>
+                        <td id="password-{{ login.id }}">{{ login.password }}</td>
+                        <td>❌</td>
+                        <td>
+                            <button class="btn btn-edit" onclick="editLogin({{ login.id }})">Edit</button>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr id="row-{{ login.id }}">
+                        <td id="id-{{ login.id }}">{{ login.id }}</td>
+                        <td id="login-{{ login.id }}">{{ login.login }}</td>
+                        <td id="password-{{ login.id }}">{{ login.password }}</td>
+                        <td>✔️</td>
+                        <td>
+                            <button class="btn btn-edit" onclick="editLogin({{ login.id }})">Edit</button>
+                        </td>
+                    </tr>
+                {% endif %}
+
+            {% endfor %}
+            <div class="pagination">
+                <span>{{ page_obj.number }} - Sahifa</span>
+
+                {% if page_obj.has_previous %}
+                    <a href="?page=1" class="btn option">Oldingisi</a>
+                    <a href="?page={{ page_obj.previous_page_number }}"
+                       class="btn option">Keyingisi</a>
+                {% endif %}
+
+
+                {% if page_obj.has_next %}
+                    {#                    <a href="?page={{ page_obj.next_page_number }}" class="btn">Keyingi</a>#}
+                    <a href="?page={{ page_obj.paginator.num_pages }}" class="btn option">Keyingi</a>
+                {% endif %}
+            </div>
+
+            </tbody>
+        </table>
+    </div>
+    <script>
+
+        let currentEditId = null;
+
+        function showModal(id = null) {
+            const form = document.getElementById('modal-form');
+            const title = document.getElementById('modal-title');
+            const loginField = document.getElementById('modal-login');
+            const passwordField = document.getElementById('modal-password');
+
+            document.querySelector('.overlay').classList.add('show');
+            document.getElementById('modal').classList.add('show');
+            currentEditId = id;
+
+            if (id) {
+                form.action = `/update_login/${id}/`;
+                title.innerText = "Edit Login";
+                loginField.value = document.getElementById(`login-${id}`).innerText;
+                passwordField.value = document.getElementById(`password-${id}`).innerText;
+            } else {
+                form.action = '/create_login/';
+                title.innerText = "Add New Login";
+                loginField.value = "";
+                passwordField.value = "";
+            }
+        }
+
+        function hideModal() {
+            document.querySelector('.overlay').classList.remove('show');
+            document.getElementById('modal').classList.remove('show');
+            document.querySelector('.loading').style.display = 'none';
+        }
+
+        function editLogin(id) {
+            showModal(id);
+        }
+        var canvas = document.getElementById("canvas");
+
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        // Initialize the GL context
+        var gl = canvas.getContext('webgl');
+        if(!gl){
+            console.error("Unable to initialize WebGL.");
+        }
+
+        //Time
+        var time = 0.0;
+
+        //************** Shader sources **************
+
+        var vertexSource = `
+attribute vec2 position;
+void main() {
+  gl_Position = vec4(position, 0.0, 1.0);
+}
+`;
+
+        var fragmentSource = `
+precision highp float;
+
+#define AA
+
+uniform float width;
+uniform float height;
+vec2 resolution = vec2(width, height);
+
+uniform float time;
+
+void main(){
+
+	float strength = 0.4;
+	float t = time/6.0;
+
+	vec3 col = vec3(0);
+	vec2 fC = gl_FragCoord.xy;
+
+	#ifdef AA
+	for(int i = -1; i <= 1; i++) {
+		for(int j = -1; j <= 1; j++) {
+
+			fC = gl_FragCoord.xy+vec2(i,j)/3.0;
+
+			#endif
+
+			//Normalized pixel coordinates (from 0 to 1)
+			vec2 pos = fC/resolution.xy;
+
+			pos.y /= resolution.x/resolution.y;
+			pos = 4.0*(vec2(0.5) - pos);
+
+			for(float k = 1.0; k < 7.0; k+=1.0){
+				pos.x += strength * sin(2.0*t+k*1.5 * pos.y)+t*0.5;
+				pos.y += strength * cos(2.0*t+k*1.5 * pos.x);
+			}
+
+			//Time varying pixel colour
+			col += 0.5 + 0.5*cos(time+pos.xyx+vec3(0,2,4));
+
+			#ifdef AA
+		}
+	}
+
+	col /= 9.0;
+	#endif
+
+  //Gamma
+  col = pow(col, vec3(0.4545));
+
+	//Fragment colour
+	gl_FragColor = vec4(col,1.0);
+}
+`;
+
+        //************** Utility functions **************
+
+        window.addEventListener( 'resize', onWindowResize, false );
+
+        function onWindowResize(){
+            canvas.width  = window.innerWidth;
+            canvas.height = window.innerHeight;
+            gl.viewport(0, 0, canvas.width, canvas.height);
+            gl.uniform1f(widthHandle, window.innerWidth);
+            gl.uniform1f(heightHandle, window.innerHeight);
+        }
+
+
+        //Compile shader and combine with source
+        function compileShader(shaderSource, shaderType){
+            var shader = gl.createShader(shaderType);
+            gl.shaderSource(shader, shaderSource);
+            gl.compileShader(shader);
+            if(!gl.getShaderParameter(shader, gl.COMPILE_STATUS)){
+                throw "Shader compile failed with: " + gl.getShaderInfoLog(shader);
+            }
+            return shader;
+        }
+
+        //From https://codepen.io/jlfwong/pen/GqmroZ
+        //Utility to complain loudly if we fail to find the attribute/uniform
+        function getAttribLocation(program, name) {
+            var attributeLocation = gl.getAttribLocation(program, name);
+            if (attributeLocation === -1) {
+                throw 'Cannot find attribute ' + name + '.';
+            }
+            return attributeLocation;
+        }
+
+        function getUniformLocation(program, name) {
+            var attributeLocation = gl.getUniformLocation(program, name);
+            if (attributeLocation === -1) {
+                throw 'Cannot find uniform ' + name + '.';
+            }
+            return attributeLocation;
+        }
+
+        //************** Create shaders **************
+
+        //Create vertex and fragment shaders
+        var vertexShader = compileShader(vertexSource, gl.VERTEX_SHADER);
+        var fragmentShader = compileShader(fragmentSource, gl.FRAGMENT_SHADER);
+
+        //Create shader programs
+        var program = gl.createProgram();
+        gl.attachShader(program, vertexShader);
+        gl.attachShader(program, fragmentShader);
+        gl.linkProgram(program);
+
+        gl.useProgram(program);
+
+        //Set up rectangle covering entire canvas
+        var vertexData = new Float32Array([
+            -1.0,  1.0, 	// top left
+            -1.0, -1.0, 	// bottom left
+            1.0,  1.0, 	// top right
+            1.0, -1.0, 	// bottom right
+        ]);
+
+        //Create vertex buffer
+        var vertexDataBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, vertexDataBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, vertexData, gl.STATIC_DRAW);
+
+        // Layout of our data in the vertex buffer
+        var positionHandle = getAttribLocation(program, 'position');
+
+        gl.enableVertexAttribArray(positionHandle);
+        gl.vertexAttribPointer(positionHandle,
+            2, 				// position is a vec2 (2 values per component)
+            gl.FLOAT, // each component is a float
+            false, 		// don't normalize values
+            2 * 4, 		// two 4 byte float components per vertex (32 bit float is 4 bytes)
+            0 				// how many bytes inside the buffer to start from
+        );
+
+        //Set uniform handle
+        var timeHandle = getUniformLocation(program, 'time');
+        var widthHandle = getUniformLocation(program, 'width');
+        var heightHandle = getUniformLocation(program, 'height');
+
+        gl.uniform1f(widthHandle, window.innerWidth);
+        gl.uniform1f(heightHandle, window.innerHeight);
+
+        var lastFrame = Date.now();
+        var thisFrame;
+
+        function draw(){
+
+            //Update time
+            thisFrame = Date.now();
+            time += (thisFrame - lastFrame)/770;
+            lastFrame = thisFrame;
+
+            //Send uniforms to program
+            gl.uniform1f(timeHandle, time);
+            //Draw a triangle strip connecting vertices 0-4
+            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+            requestAnimationFrame(draw);
+        }
+
+        draw();
+    </script>
+
+</div>
+
+
+</body>
