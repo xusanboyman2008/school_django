@@ -12,6 +12,7 @@ psycopg-binary
 psycopg-pool
 pure-python-adb
 requests~=2.32.3
+corsheaders
 sqlparse
 dj_database_url
 Django
