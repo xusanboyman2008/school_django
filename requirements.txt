@@ -16,5 +16,6 @@ django-cors-headers
 sqlparse
 dj_database_url
 Django
+gunicorn
 pytz
 APScheduler
