@@ -172,18 +172,6 @@
             background: #218838;
         }
 
-        .loading {
-            display: none;
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            color: #007bff;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            z-index: 15;
-        }
 
         /* Responsive Styles */
         @media (max-width: 768px) {
@@ -201,7 +189,6 @@
             }
 
             .btn {
-                padding: 8px 12px;
                 font-size: 12px;
             }
 
@@ -227,10 +214,24 @@
                 padding: 6px;
             }
 
-            .btn {
-                font-size: 10px;
-                padding: 6px 8px;
+            #canvas {
+                width: 100%;
             }
+
+
+            #modal {
+                width: 80%;
+            }
+
+            #modal input, select, option {
+                width: 87%;
+            }
+
+            #modal button {
+                width: 30%;
+                height: 30%;
+            }
+
 
             .form-container {
                 width: 100%;
@@ -257,6 +258,7 @@
         .option:hover {
             background: red;
         }
+
         #canvas {
             position: absolute;
             top: 0;
@@ -297,125 +299,117 @@
         tbody tr:hover {
             background: rgba(0, 123, 255, 0.2); /* Example hover effect */
         }
-        p{
+
+        p {
             color: white;
         }
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            width: 200px;
-            padding: 5px 10px;
-            background-color: #007bff;
-            border-radius: 20px;
-            color: white;
-        }
+
 
         .toggle-container label {
             font-size: 16px;
         }
 
-        .toggle {
-            position: relative;
-            width: 60px;
-            height: 30px;
-            background-color: #ccc;
-            border-radius: 30px;
-            cursor: pointer;
-        }
 
-        .toggle:before {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
-            background-color: white;
-            border-radius: 50%;
-            transition: 0.3s;
-        }
-
-        .toggle.active {
-            background-color: #28a745;
-        }
-
-        .toggle.active:before {
-            transform: translateX(30px);
-        }
-
-        th{
+        th {
             border: 1px solid #5c5a5a;
         }
-        td{
+
+        td {
             border: 1px solid rgba(66, 63, 63, 0.5);
             color: white;
         }
-        span{
+
+        span {
             color: white;
         }
-        #modal{
+
+        #modal {
             background: black;
         }
-        label{
+
+        label {
             color: white;
         }
-        input{
+
+        input {
             background: #201e1e;
             border: 1px solid #686868;
         }
-        .btn btn-edit:hover{
+
+        .btn btn-edit:hover {
             background: #e0a800;
         }
 
-        .btn-close{
+        .btn-close {
             background: rgb(72, 78, 81);
         }
-        .btn-close:hover{
-            background:  #aaa;
+
+        .btn-close:hover {
+            background: #aaa;
         }
-        body {
-            --fbc-blue-60: #0060df;
-            --fbc-blue-70: #003eaa;
-            --fbc-gray-20: #ededf0;
-            --fbc-light-gray: #F0F0F4;
-            --fbc-white: #ffffff;
-            --fbc-transition: all .15s cubic-bezier(.07,.95,0,1);
-            --fbc-borders: 1px solid #ededf0;
-            --fbc-primary-text: #15141A;
-            --fbc-secondary-text: #5B5B66;
-            --fbc-font-size: 13px;
-        }
-        input::placeholder{
+
+
+        input::placeholder {
             color: #6e6d6d;
         }
-        select:optional{
+
+        select:optional {
             color: #f4eded;
             background-color: #717171;
         }
-        h3{
+
+        h3 {
             color: white;
         }
-        input{
+
+        input {
             color: white;
         }
-        .btn btn-edit{
+
+        .btn btn-edit {
             background: rgba(255, 255, 0, 0.49);
         }
-        select{
+
+        select {
             color: white;
             background: rgba(138, 137, 137, 0.38);
             border: 1px solid rgba(156, 152, 152, 0.5);
 
         }
+
+        @media (max-height: 450px) {
+            body .made h2 {
+                display: none;
+            }
+
+            #canvas {
+                position: fixed;
+                width: 100%;
+                height: 200%;
+            }
+
+
+        }
+
+        @media (max-width: 360px) {
+            #canvas {
+                position: fixed;
+                width: 100%;
+                height: 100%;
+            }
+        }
     </style>
 </head>
 <canvas id="canvas" style="z-index: 1" width="1400" height="600"></canvas>
-
+<div style="position: fixed;">
+    <div>Telefoningizni aylatiring</div>
+</div>
 <body>
-
+<div class="made"
+     style="position: fixed;bottom: 10px;display: flex;justify-content: center;width: 100%;color: #ff6600;z-index: 1000">
+    <h2>Made by Xusanboy</h2></div>
 <div id="body" style="z-index: 10">
-    <div class="loading">Loading...</div>
+
 
     <div class="overlay" onclick="hideModal()" aria-hidden="true"></div>
 
@@ -447,15 +441,28 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-close" onclick="hideModal()">Close</button>
+                <button type="button" class="btn btn-delete" style="background: red;height: 30%" onclick="hideModal()">
+                    Delete
+                </button>
                 <button type="submit" class="btn btn-save">Save</button>
             </div>
         </div>
     </form>
+    <div style="position: relative;width: 71.7%;display: flex;align-items: center;justify-content: center;scale: 1.8;margin-bottom: 50px">
+        {% if request.user.is_authenticated %}
+            <a href="{% url 'login' %}" style="color: rgba(33,187,221,0.44);text-decoration: none">.</a>
+        {% else %}
+            <a href="{% url 'logout' %}" style="color: rgba(33,187,221,0.44);text-decoration: none">.</a>
+        {% endif %}
+    </div>
 
     <div class="table-container" style="background: rgba(0, 0, 0, 0.65)">
-        <div style="padding-bottom: 10px; text-align: right;">
-            <button class="btn btn-add" onclick="showModal()">Add New Login</button>
-        </div>
+
+        {% if request.user.is_authenticated %}
+            <div style="padding-bottom: 10px; text-align: right;">
+                <button class="btn btn-add" onclick="showModal()">Add New Login</button>
+            </div>
+        {% endif %}
         <table>
             <thead>
             <tr>
@@ -463,7 +470,9 @@
                 <th>Login</th>
                 <th>Parol</th>
                 <th>Status</th>
-                <th>Actions</th>
+                {% if request.user.is_authenticated %}
+                    <th>Actions</th>
+                {% endif %}
             </tr>
             </thead>
             <tbody id="logins-table">
@@ -474,9 +483,13 @@
                         <td id="login-{{ login.id }}">{{ login.login }}</td>
                         <td id="password-{{ login.id }}">{{ login.password }}</td>
                         <td>❌</td>
-                        <td>
-                            <button class="btn btn-edit" onclick="editLogin({{ login.id }})">Edit</button>
-                        </td>
+                        {% if request.user.is_authenticated %}
+                            <td>
+                                <div style="display: flex;align-items: center;justify-content: center;scale:1.2;gap:20px">
+                                    <button class="btn btn-edit" onclick="editLogin({{ login.id }})">Edit</button>
+                                </div>
+                            </td>
+                        {% endif %}
                     </tr>
                 {% else %}
                     <tr id="row-{{ login.id }}">
@@ -484,9 +497,13 @@
                         <td id="login-{{ login.id }}">{{ login.login }}</td>
                         <td id="password-{{ login.id }}">{{ login.password }}</td>
                         <td>✔️</td>
-                        <td>
-                            <button class="btn btn-edit" onclick="editLogin({{ login.id }})">Edit</button>
-                        </td>
+                        {% if request.user.is_authenticated %}
+                            <td>
+                                <div style="display: flex;align-items: center;justify-content: center;scale:1.2;gap:20px">
+                                    <button class="btn btn-edit" onclick="editLogin({{ login.id }})">Edit</button>
+                                </div>
+                            </td>
+                        {% endif %}
                     </tr>
                 {% endif %}
 
@@ -546,6 +563,7 @@
         function editLogin(id) {
             showModal(id);
         }
+
         var canvas = document.getElementById("canvas");
 
         canvas.width = window.innerWidth;
@@ -553,7 +571,7 @@
 
         // Initialize the GL context
         var gl = canvas.getContext('webgl');
-        if(!gl){
+        if (!gl) {
             console.error("Unable to initialize WebGL.");
         }
 
@@ -627,10 +645,10 @@ void main(){
 
         //************** Utility functions **************
 
-        window.addEventListener( 'resize', onWindowResize, false );
+        window.addEventListener('resize', onWindowResize, false);
 
-        function onWindowResize(){
-            canvas.width  = window.innerWidth;
+        function onWindowResize() {
+            canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             gl.viewport(0, 0, canvas.width, canvas.height);
             gl.uniform1f(widthHandle, window.innerWidth);
@@ -639,11 +657,11 @@ void main(){
 
 
         //Compile shader and combine with source
-        function compileShader(shaderSource, shaderType){
+        function compileShader(shaderSource, shaderType) {
             var shader = gl.createShader(shaderType);
             gl.shaderSource(shader, shaderSource);
             gl.compileShader(shader);
-            if(!gl.getShaderParameter(shader, gl.COMPILE_STATUS)){
+            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
                 throw "Shader compile failed with: " + gl.getShaderInfoLog(shader);
             }
             return shader;
@@ -683,9 +701,9 @@ void main(){
 
         //Set up rectangle covering entire canvas
         var vertexData = new Float32Array([
-            -1.0,  1.0, 	// top left
+            -1.0, 1.0, 	// top left
             -1.0, -1.0, 	// bottom left
-            1.0,  1.0, 	// top right
+            1.0, 1.0, 	// top right
             1.0, -1.0, 	// bottom right
         ]);
 
@@ -717,11 +735,11 @@ void main(){
         var lastFrame = Date.now();
         var thisFrame;
 
-        function draw(){
+        function draw() {
 
             //Update time
             thisFrame = Date.now();
-            time += (thisFrame - lastFrame)/770;
+            time += (thisFrame - lastFrame) / 770;
             lastFrame = thisFrame;
 
             //Send uniforms to program
@@ -734,7 +752,7 @@ void main(){
 
         draw();
 
-       let a = window.Telegram.WebApp?.initData?.id
+        let a = window.Telegram.WebApp?.initData?.id
         window.Telegram.WebApp?.expand()
         window.Telegram.WebApp?.isFullscreen(true)
         window.Telegram.WebApp?.requestFullscreen()
