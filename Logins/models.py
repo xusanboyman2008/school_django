@@ -7,6 +7,8 @@ class Logins_model(models.Model):
     login = models.CharField(max_length=100)
     password = models.CharField(max_length=100)
     status = models.BooleanField(default=True)
+    def __str__(self):
+        return self.login
 
 
 class User(models.Model):
@@ -14,3 +16,5 @@ class User(models.Model):
     name = models.CharField(max_length=100)
     tg_id = models.BigIntegerField()
     sending = models.BooleanField(default=False)
+    def __str__(self):
+        return self.name

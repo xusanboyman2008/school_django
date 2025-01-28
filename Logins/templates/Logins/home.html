@@ -398,12 +398,13 @@
                 height: 100%;
             }
         }
+
+        canvas{
+            width: 100%;
+        }
     </style>
 </head>
 <canvas id="canvas" style="z-index: 1" width="1400" height="600"></canvas>
-<div style="position: fixed;">
-    <div>Telefoningizni aylatiring</div>
-</div>
 <body>
 <div class="made"
      style="position: fixed;bottom: 10px;display: flex;justify-content: center;width: 100%;color: #ff6600;z-index: 1000">
@@ -449,7 +450,7 @@
         </div>
     </form>
     <div style="position: relative;width: 71.7%;display: flex;align-items: center;justify-content: center;scale: 1.8;margin-bottom: 50px">
-        {% if request.user.is_authenticated %}
+        {% if not request.user.is_authenticated %}
             <a href="{% url 'login' %}" style="color: rgba(33,187,221,0.44);text-decoration: none">.</a>
         {% else %}
             <a href="{% url 'logout' %}" style="color: rgba(33,187,221,0.44);text-decoration: none">.</a>

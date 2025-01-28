@@ -21,7 +21,7 @@ def all(request):
 
 def loginPage(request):
     if request.user.is_authenticated:
-        return redirect('home')
+        return redirect('all_logins')
 
     if request.method == 'POST':
         password = request.POST.get('email').lower()
