@@ -12,9 +12,13 @@
         .form-container {
             z-index: 30; /* Ensure modal is on top */
         }
-
+        *{
+            width: auto;
+        }
         /* General Styles */
         body {
+            overflow-x: hidden;
+            overflow-y: hidden;
             font-family: Arial, sans-serif;
             background: linear-gradient(to bottom, #f8f9fa, #e9ecef);
             margin: 0;
@@ -176,7 +180,7 @@
         /* Responsive Styles */
         @media (max-width: 768px) {
             .table-container {
-                width: 95%;
+                width: 161%;
                 padding: 10px;
             }
 
@@ -263,18 +267,17 @@
             position: absolute;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
+            width: 167%;
+            height: 167%;
             z-index: -1; /* Place the canvas behind other content */
         }
 
         /* Apply a blur effect to the canvas */
         canvas {
-            position: fixed;
             top: 0;
             left: 0;
             z-index: 0; /* Keep canvas behind other content */
-            filter: blur(10px); /* This will blur the canvas */
+            filter: blur(3px); /* This will blur the canvas */
             pointer-events: none; /* Prevent canvas from interacting with clicks */
         }
 
@@ -368,6 +371,7 @@
 
         .btn btn-edit {
             background: rgba(255, 255, 0, 0.49);
+            scale: 1.2;
         }
 
         select {
@@ -399,15 +403,19 @@
             }
         }
 
-        canvas{
-            width: 98%;
+
+        .d{
+            font-size: 150%;
         }
     </style>
 </head>
 <canvas id="canvas" style="z-index: 1" width="1400" height="600"></canvas>
 <body>
+<div id="loading" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+    <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 50px; height: 50px; animation: spin 2s linear infinite;"></div>
+</div>
 <div class="made"
-     style="position: fixed;bottom: 10px;display: flex;justify-content: center;width: 100%;color: #ff6600;z-index: 1000">
+     style="position: fixed;bottom: 3px;display: flex;justify-content: center;width: 90%;color: #ff6600;z-index: 1000">
     <h2>Made by Xusanboy</h2></div>
 <div id="body" style="z-index: 10">
 
@@ -422,10 +430,10 @@
             </div>
             <div class="form-group">
                 <label for="modal-login" style="margin-bottom: 5px">Login:</label>
-                <input type="text" id="modal-login" name="login" placeholder="Loginni kiriting" required>
+                <input type="text"  id="modal-login" name="login" placeholder="Loginni kiriting" required>
             </div>
             <div class="form-group">
-                <label for="modal-password">Parol:</label>
+                <label for="modal-password" >Parol:</label>
                 <input type="text" id="modal-password" name="password" placeholder="Parollni kiriting" required>
             </div>
             <div class="form-group">
@@ -441,11 +449,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-close" onclick="hideModal()">Close</button>
-                <button type="button" class="btn btn-delete" style="background: red;height: 30%" onclick="hideModal()">
-                    Delete
-                </button>
-                <button type="submit" class="btn btn-save">Save</button>
+                <button type="button" class="btn btn-close d" onclick="hideModal()">Close</button>
+                <button type="submit" class="btn btn-save d">Save</button>
             </div>
         </div>
     </form>
@@ -457,7 +462,7 @@
         {% endif %}
     </div>
 
-    <div class="table-container" style="background: rgba(0, 0, 0, 0.65)">
+    <div class="table-container" style="background: rgba(0, 0, 0, 0.65);margin-top: -10px">
 
         {% if request.user.is_authenticated %}
             <div style="padding-bottom: 10px; text-align: right;">
@@ -488,6 +493,10 @@
                             <td>
                                 <div style="display: flex;align-items: center;justify-content: center;scale:1.2;gap:20px">
                                     <button class="btn btn-edit" onclick="editLogin({{ login.id }})">Edit</button>
+                                    <form method="POST" action="/delete/{{ login.id }}">
+                                        {% csrf_token %}
+                                        <button class="btn btn-edit" style="background: red" onclick="deleteLogin({{ login.id }})">Delete</button>
+                                    </form>
                                 </div>
                             </td>
                         {% endif %}
@@ -502,6 +511,7 @@
                             <td>
                                 <div style="display: flex;align-items: center;justify-content: center;scale:1.2;gap:20px">
                                     <button class="btn btn-edit" onclick="editLogin({{ login.id }})">Edit</button>
+                                    <button class="btn btn-edit" style="background: red" onclick="deleteLogin({{ login.id }})">Delete</button>
                                 </div>
                             </td>
                         {% endif %}
@@ -514,7 +524,7 @@
 
                 {% if page_obj.has_previous %}
                     <a href="?page={{ page_obj.previous_page_number }}"
-                       class="btn option">Keyingisi</a>
+                       class="btn option">Oldingi</a>
                 {% endif %}
 
 
@@ -523,7 +533,7 @@
 {#                    <a href="?page={{ page_obj.paginator.num_pages }}" class="btn option">Keyingi</a>#}
                 {% endif %}
             </div>
-
+            <div style="display:flex;align-items: center;justify-content: center;"><span style="background:rgb(63,63,228);border-radius: 10px;color:white;padding:10px;margin-top: -20px;margin-bottom: 20px">Jami {{ all }} dan {{ valid }} tasi ishlamoqda</span></div>
             </tbody>
         </table>
     </div>
@@ -758,7 +768,6 @@ void main(){
         window.Telegram.WebApp?.requestFullscreen()
         console.log(a)
     </script>
-
 </div>
 
 
