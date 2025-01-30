@@ -9,6 +9,8 @@ class Logins_model(models.Model):
     status = models.BooleanField(default=True)
     def __str__(self):
         return self.login
+    class Meta:
+        ordering = ['id']
 
 
 class User(models.Model):
