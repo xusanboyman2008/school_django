@@ -71,13 +71,11 @@ def delete_login(request, pk):
 
     if request.method == "POST":
         login_instance.delete()
-        # Redirect to 'all_logins' view after deletion
         return redirect(reverse('all_logins') + f'?page={request.GET.get("page", 1)}')
 
     return JsonResponse({"success": False, "message": "Invalid request method"})
 
 
 def logoutUser(request):
-    if not request.user.is_authenticated:
-        return redirect('all_logins')
-    logout(request)
+        logout(request)
+        return redirect(reverse('all_logins') + f'?page={request.GET.get("page", 1)}')

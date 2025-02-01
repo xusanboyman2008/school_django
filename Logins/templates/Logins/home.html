@@ -12,9 +12,11 @@
         .form-container {
             z-index: 30; /* Ensure modal is on top */
         }
-        *{
+
+        * {
             width: auto;
         }
+
         /* General Styles */
         body {
             overflow-x: hidden;
@@ -184,11 +186,12 @@
                 padding: 10px;
             }
 
-            .sss{
-                margin-top: 47px!important;
-                margin-bottom: -60px!important;
+            .sss {
+                margin-top: 47px !important;
+                margin-bottom: -60px !important;
             }
-            .btn-add{
+
+            .btn-add {
                 scale: 1 !important;
             }
 
@@ -197,26 +200,28 @@
                 scale: 0.9;
                 margin-left: -10px;
             }
-            *{
+
+            * {
                 font-size: 22px;
             }
+
             #canvas {
                 position: fixed;
                 width: 100%;
                 height: 200%;
             }
 
-            .table-container{
+            .table-container {
                 scale: 0.8;
                 margin-left: -30px;
                 width: 110%;
             }
 
-            .btn{
+            .btn {
                 scale: 0.7;
             }
 
-            span{
+            span {
                 scale: 0.7;
             }
 
@@ -224,13 +229,16 @@
                 padding: 8px;
                 font-size: 22px;
             }
-            tr{
+
+            tr {
                 font-size: 22px;
             }
-            td div{
-                gap:0% !important;
+
+            td div {
+                gap: 0% !important;
                 padding-left: 20px;
             }
+
             .btn {
                 font-size: 12px;
             }
@@ -430,7 +438,7 @@
         }
 
 
-        .d{
+        .d {
             font-size: 150%;
         }
     </style>
@@ -438,7 +446,8 @@
 <canvas id="canvas" style="z-index: 1" width="1400" height="600"></canvas>
 <body>
 <div id="loading" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-    <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 50px; height: 50px; animation: spin 2s linear infinite;"></div>
+    <div class="spinner"
+         style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 50px; height: 50px; animation: spin 2s linear infinite;"></div>
 </div>
 <div class="made"
      style="position: fixed;bottom: 3px;display: flex;justify-content: center;width: 90%;color: #ff6600;z-index: 1000">
@@ -456,10 +465,10 @@
             </div>
             <div class="form-group">
                 <label for="modal-login" style="margin-bottom: 5px">Login:</label>
-                <input type="text"  id="modal-login" name="login" placeholder="Loginni kiriting" required>
+                <input type="text" id="modal-login" name="login" placeholder="Loginni kiriting" required>
             </div>
             <div class="form-group">
-                <label for="modal-password" >Parol:</label>
+                <label for="modal-password">Parol:</label>
                 <input type="text" id="modal-password" name="password" placeholder="Parollni kiriting" required>
             </div>
             <div class="form-group">
@@ -510,10 +519,14 @@
             <tbody id="logins-table">
             {% for login in page_obj %}
                 {% if not login.status %}
-                    <tr style="background: #a30202" id="row-{{ login.id }}">
-                        <td id="id-{{ login.id }}">{{ login.id }}</td>
-                        <td id="login-{{ login.id }}">{{ login.login }}</td>
+                <tr style="background: #a30202" id="row-{{ login.id }}">
+                    <td id="id-{{ login.id }}">{{ login.id }}</td>
+                    <td id="login-{{ login.id }}">{{ login.login }}</td>
+                    {% if request.user.is_authenticated %}
                         <td id="password-{{ login.id }}">{{ login.password }}</td>
+                    {% else %}
+                        <td id="password-{{ login.id }}">********</td>
+                        {% endif %}
                         <td>❌</td>
                         {% if request.user.is_authenticated %}
                             <td>
@@ -521,28 +534,36 @@
                                     <button class="btn btn-edit" onclick="editLogin({{ login.id }})">Edit</button>
                                     <form method="POST" action="/delete/{{ login.id }}">
                                         {% csrf_token %}
-                                        <button class="btn btn-edit" style="background: red" onclick="deleteLogin({{ login.id }})">Delete</button>
+                                        <button class="btn btn-edit" style="background: red"
+                                                onclick="deleteLogin({{ login.id }})">Delete
+                                        </button>
                                     </form>
                                 </div>
                             </td>
                         {% endif %}
-                    </tr>
-                {% else %}
-                    <tr id="row-{{ login.id }}">
-                        <td id="id-{{ login.id }}">{{ login.id }}</td>
-                        <td id="login-{{ login.id }}">{{ login.login }}</td>
-                        <td id="password-{{ login.id }}">{{ login.password }}</td>
-                        <td>✔️</td>
-                        {% if request.user.is_authenticated %}
-                            <td>
-                                <div style="display: flex;align-items: center;justify-content: center;scale:1.2;gap:20px">
-                                    <button class="btn btn-edit" onclick="editLogin({{ login.id }})">Edit</button>
-                                    <button class="btn btn-edit" style="background: red" onclick="deleteLogin({{ login.id }})">Delete</button>
-                                </div>
-                            </td>
-                        {% endif %}
-                    </tr>
-                {% endif %}
+                        </tr>
+                    {% else %}
+                        <tr id="row-{{ login.id }}">
+                            <td id="id-{{ login.id }}">{{ login.id }}</td>
+                            <td id="login-{{ login.id }}">{{ login.login }}</td>
+                            {% if request.user.is_authenticated %}
+                                <td id="password-{{ login.id }}">{{ login.password }}</td>
+                            {% else %}
+                            <td id="password-{{ login.id }}">********</td>
+                                {% endif %}
+                            <td>✔️</td>
+                            {% if request.user.is_authenticated %}
+                                <td>
+                                    <div style="display: flex;align-items: center;justify-content: center;scale:1.2;gap:20px">
+                                        <button class="btn btn-edit" onclick="editLogin({{ login.id }})">Edit</button>
+                                        <button class="btn btn-edit" style="background: red"
+                                                onclick="deleteLogin({{ login.id }})">Delete
+                                        </button>
+                                    </div>
+                                </td>
+                            {% endif %}
+                        </tr>
+                    {% endif %}
 
             {% endfor %}
             <div class="pagination">
@@ -555,16 +576,17 @@
 
 
                 {% if page_obj.has_next %}
-                                        <a href="?page={{ page_obj.next_page_number }}" class="btn option">Keyingi</a>
-{#                    <a href="?page={{ page_obj.paginator.num_pages }}" class="btn option">Keyingi</a>#}
+                    <a href="?page={{ page_obj.next_page_number }}" class="btn option">Keyingi</a>
+                    {#                    <a href="?page={{ page_obj.paginator.num_pages }}" class="btn option">Keyingi</a>#}
                 {% endif %}
             </div>
-            <div class="sss" style="display:flex;align-items: center;justify-content: center;"><span style="background:rgb(63,63,228);border-radius: 10px;color:white;padding:10px;margin-top: -20px;margin-bottom: 20px">Jami {{ all }} dan {{ valid }} tasi ishlamoqda</span></div>
+            <div class="sss" style="display:flex;align-items: center;justify-content: center;"><span
+                    style="background:rgb(63,63,228);border-radius: 10px;color:white;padding:10px;margin-top: -20px;margin-bottom: 20px">Jami {{ all }} dan {{ valid }} tasi ishlamoqda</span>
+            </div>
             </tbody>
         </table>
     </div>
     <script>
-
         let currentEditId = null;
 
         function showModal(id = null) {
