@@ -1,10 +1,30 @@
 <!DOCTYPE html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Logins Table</title>
     <script src="https://telegram.org/js/telegram-web-app.js?56"></script>
     <style>
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+        @media (max-height: 400px) {
+            *{
+                overflow: auto;
+            }
+            #canvas{
+                height: 270% !important;
+                overflow: hidden;
+            }
+            .made{
+                display: none !important;
+            }
+        }
         .overlay {
             z-index: 20; /* Ensure overlay is on top of everything */
         }
@@ -259,7 +279,7 @@
             }
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 600px) {
             th, td {
                 font-size: 10px;
                 padding: 6px;
@@ -286,6 +306,47 @@
 
             .form-container {
                 width: 100%;
+                padding: 10px;
+            }
+
+            .form-group input {
+                font-size: 12px;
+                padding: 8px;
+            }
+        }
+        @media (max-width: 370px) {
+            th, td {
+                font-size: 10px;
+                padding: 6px;
+            }
+            #body table{
+                scale: 73%;
+                position: relative;
+                top: -10px;
+                left: -25px;
+            }
+
+            #canvas {
+                width: 80%;
+            }
+
+
+            #modal {
+                width: 73%;
+            }
+
+            #modal input, select, option {
+                width: 80%;
+            }
+
+            #modal button {
+                width: 20%;
+                height: 20%;
+            }
+
+
+            .form-container {
+                width: 80%;
                 padding: 10px;
             }
 
@@ -445,9 +506,11 @@
 </head>
 <canvas id="canvas" style="z-index: 1" width="1400" height="600"></canvas>
 <body>
-<div id="loading" style="display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-    <div class="spinner"
-         style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 50px; height: 50px; animation: spin 2s linear infinite;"></div>
+<div id="loading"
+     style="display: flex;align-items: center;justify-content: center ;position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);width: 100%;height: 100%;background:rgba(1,1,1,0.7); z-index: 100;">
+            <div class="spinner"
+                 style="background: black;border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 50px; height: 50px; animation: spin 1s linear infinite;">
+    </div>
 </div>
 <div class="made"
      style="position: fixed;bottom: 3px;display: flex;justify-content: center;width: 90%;color: #ff6600;z-index: 1000">
@@ -519,13 +582,13 @@
             <tbody id="logins-table">
             {% for login in page_obj %}
                 {% if not login.status %}
-                <tr style="background: #a30202" id="row-{{ login.id }}">
-                    <td id="id-{{ login.id }}">{{ login.id }}</td>
-                    <td id="login-{{ login.id }}">{{ login.login }}</td>
-                    {% if request.user.is_authenticated %}
-                        <td id="password-{{ login.id }}">{{ login.password }}</td>
-                    {% else %}
-                        <td id="password-{{ login.id }}">********</td>
+                    <tr style="background: #a30202" id="row-{{ login.id }}">
+                        <td id="id-{{ login.id }}">{{ login.id }}</td>
+                        <td id="login-{{ login.id }}">{{ login.login }}</td>
+                        {% if request.user.is_authenticated %}
+                            <td id="password-{{ login.id }}">{{ login.password }}</td>
+                        {% else %}
+                            <td id="password-{{ login.id }}">********</td>
                         {% endif %}
                         <td>❌</td>
                         {% if request.user.is_authenticated %}
@@ -541,29 +604,32 @@
                                 </div>
                             </td>
                         {% endif %}
-                        </tr>
-                    {% else %}
-                        <tr id="row-{{ login.id }}">
-                            <td id="id-{{ login.id }}">{{ login.id }}</td>
-                            <td id="login-{{ login.id }}">{{ login.login }}</td>
-                            {% if request.user.is_authenticated %}
-                                <td id="password-{{ login.id }}">{{ login.password }}</td>
-                            {% else %}
+                    </tr>
+                {% else %}
+                    <tr id="row-{{ login.id }}">
+                        <td id="id-{{ login.id }}">{{ login.id }}</td>
+                        <td id="login-{{ login.id }}">{{ login.login }}</td>
+                        {% if request.user.is_authenticated %}
+                            <td id="password-{{ login.id }}">{{ login.password }}</td>
+                        {% else %}
                             <td id="password-{{ login.id }}">********</td>
-                                {% endif %}
-                            <td>✔️</td>
-                            {% if request.user.is_authenticated %}
-                                <td>
-                                    <div style="display: flex;align-items: center;justify-content: center;scale:1.2;gap:20px">
-                                        <button class="btn btn-edit" onclick="editLogin({{ login.id }})">Edit</button>
+                        {% endif %}
+                        <td>✔️</td>
+                        {% if request.user.is_authenticated %}
+                            <td>
+                                <div style="display: flex;align-items: center;justify-content: center;scale:1.2;gap:20px">
+                                    <button class="btn btn-edit" onclick="editLogin({{ login.id }})">Edit</button>
+                                    <form method="POST" action="/delete/{{ login.id }}">
+                                        {% csrf_token %}
                                         <button class="btn btn-edit" style="background: red"
                                                 onclick="deleteLogin({{ login.id }})">Delete
                                         </button>
-                                    </div>
-                                </td>
-                            {% endif %}
-                        </tr>
-                    {% endif %}
+                                    </form>
+                                </div>
+                            </td>
+                        {% endif %}
+                    </tr>
+                {% endif %}
 
             {% endfor %}
             <div class="pagination">
@@ -586,66 +652,72 @@
             </tbody>
         </table>
     </div>
-    <script>
-        let currentEditId = null;
+</div>
+<script>
+    const loading = false;
+    if (!loading) {
+        document.getElementById("loading").style.display = "none";
+    }
+    let currentEditId = null;
 
-        function showModal(id = null) {
-            const form = document.getElementById('modal-form');
-            const title = document.getElementById('modal-title');
-            const loginField = document.getElementById('modal-login');
-            const passwordField = document.getElementById('modal-password');
+    function showModal(id = null) {
+        const form = document.getElementById('modal-form');
+        const title = document.getElementById('modal-title');
+        const loginField = document.getElementById('modal-login');
+        const passwordField = document.getElementById('modal-password');
 
-            document.querySelector('.overlay').classList.add('show');
-            document.getElementById('modal').classList.add('show');
-            currentEditId = id;
+        document.querySelector('.overlay').classList.add('show');
+        document.getElementById('modal').classList.add('show');
+        currentEditId = id;
 
-            if (id) {
-                form.action = `/update_login/${id}/`;
-                title.innerText = "Edit Login";
-                loginField.value = document.getElementById(`login-${id}`).innerText;
-                passwordField.value = document.getElementById(`password-${id}`).innerText;
-            } else {
-                form.action = '/create_login/';
-                title.innerText = "Add New Login";
-                loginField.value = "";
-                passwordField.value = "";
-            }
+        if (id) {
+            form.action = `/update_login/${id}/`;
+            title.innerText = "Edit Login";
+            loginField.value = document.getElementById(`login-${id}`).innerText;
+            passwordField.value = document.getElementById(`password-${id}`).innerText;
+        } else {
+            form.action = '/create_login/';
+            title.innerText = "Add New Login";
+            loginField.value = "";
+            passwordField.value = "";
         }
+    }
 
-        function hideModal() {
-            document.querySelector('.overlay').classList.remove('show');
-            document.getElementById('modal').classList.remove('show');
-            document.querySelector('.loading').style.display = 'none';
-        }
-
+    function hideModal() {
+        document.querySelector('.overlay').classList.remove('show');
+        document.getElementById('modal').classList.remove('show');
+        document.querySelector('.loading').style.display = 'none';
+    }
         function editLogin(id) {
             showModal(id);
         }
 
-        var canvas = document.getElementById("canvas");
 
-        canvas.width = window.innerWidth;
-        canvas.height = window.innerHeight;
 
-        // Initialize the GL context
-        var gl = canvas.getContext('webgl');
-        if (!gl) {
-            console.error("Unable to initialize WebGL.");
-        }
+    var canvas = document.getElementById("canvas");
 
-        //Time
-        var time = 0.0;
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
 
-        //************** Shader sources **************
+    // Initialize the GL context
+    var gl = canvas.getContext('webgl');
+    if (!gl) {
+        console.error("Unable to initialize WebGL.");
+    }
 
-        var vertexSource = `
+    //Time
+    var time = 0.0;
+
+    //************** Shader sources **************
+
+    var vertexSource = `
 attribute vec2 position;
 void main() {
   gl_Position = vec4(position, 0.0, 1.0);
 }
 `;
 
-        var fragmentSource = `
+    var fragmentSource = `
 precision highp float;
 
 #define AA
@@ -701,122 +773,121 @@ void main(){
 }
 `;
 
-        //************** Utility functions **************
+    //************** Utility functions **************
 
-        window.addEventListener('resize', onWindowResize, false);
+    window.addEventListener('resize', onWindowResize, false);
 
-        function onWindowResize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            gl.viewport(0, 0, canvas.width, canvas.height);
-            gl.uniform1f(widthHandle, window.innerWidth);
-            gl.uniform1f(heightHandle, window.innerHeight);
-        }
-
-
-        //Compile shader and combine with source
-        function compileShader(shaderSource, shaderType) {
-            var shader = gl.createShader(shaderType);
-            gl.shaderSource(shader, shaderSource);
-            gl.compileShader(shader);
-            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
-                throw "Shader compile failed with: " + gl.getShaderInfoLog(shader);
-            }
-            return shader;
-        }
-
-        //From https://codepen.io/jlfwong/pen/GqmroZ
-        //Utility to complain loudly if we fail to find the attribute/uniform
-        function getAttribLocation(program, name) {
-            var attributeLocation = gl.getAttribLocation(program, name);
-            if (attributeLocation === -1) {
-                throw 'Cannot find attribute ' + name + '.';
-            }
-            return attributeLocation;
-        }
-
-        function getUniformLocation(program, name) {
-            var attributeLocation = gl.getUniformLocation(program, name);
-            if (attributeLocation === -1) {
-                throw 'Cannot find uniform ' + name + '.';
-            }
-            return attributeLocation;
-        }
-
-        //************** Create shaders **************
-
-        //Create vertex and fragment shaders
-        var vertexShader = compileShader(vertexSource, gl.VERTEX_SHADER);
-        var fragmentShader = compileShader(fragmentSource, gl.FRAGMENT_SHADER);
-
-        //Create shader programs
-        var program = gl.createProgram();
-        gl.attachShader(program, vertexShader);
-        gl.attachShader(program, fragmentShader);
-        gl.linkProgram(program);
-
-        gl.useProgram(program);
-
-        //Set up rectangle covering entire canvas
-        var vertexData = new Float32Array([
-            -1.0, 1.0, 	// top left
-            -1.0, -1.0, 	// bottom left
-            1.0, 1.0, 	// top right
-            1.0, -1.0, 	// bottom right
-        ]);
-
-        //Create vertex buffer
-        var vertexDataBuffer = gl.createBuffer();
-        gl.bindBuffer(gl.ARRAY_BUFFER, vertexDataBuffer);
-        gl.bufferData(gl.ARRAY_BUFFER, vertexData, gl.STATIC_DRAW);
-
-        // Layout of our data in the vertex buffer
-        var positionHandle = getAttribLocation(program, 'position');
-
-        gl.enableVertexAttribArray(positionHandle);
-        gl.vertexAttribPointer(positionHandle,
-            2, 				// position is a vec2 (2 values per component)
-            gl.FLOAT, // each component is a float
-            false, 		// don't normalize values
-            2 * 4, 		// two 4 byte float components per vertex (32 bit float is 4 bytes)
-            0 				// how many bytes inside the buffer to start from
-        );
-
-        //Set uniform handle
-        var timeHandle = getUniformLocation(program, 'time');
-        var widthHandle = getUniformLocation(program, 'width');
-        var heightHandle = getUniformLocation(program, 'height');
-
+    function onWindowResize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        gl.viewport(0, 0, canvas.width, canvas.height);
         gl.uniform1f(widthHandle, window.innerWidth);
         gl.uniform1f(heightHandle, window.innerHeight);
+    }
 
-        var lastFrame = Date.now();
-        var thisFrame;
 
-        function draw() {
-
-            //Update time
-            thisFrame = Date.now();
-            time += (thisFrame - lastFrame) / 770;
-            lastFrame = thisFrame;
-
-            //Send uniforms to program
-            gl.uniform1f(timeHandle, time);
-            //Draw a triangle strip connecting vertices 0-4
-            gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
-
-            requestAnimationFrame(draw);
+    //Compile shader and combine with source
+    function compileShader(shaderSource, shaderType) {
+        var shader = gl.createShader(shaderType);
+        gl.shaderSource(shader, shaderSource);
+        gl.compileShader(shader);
+        if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+            throw "Shader compile failed with: " + gl.getShaderInfoLog(shader);
         }
+        return shader;
+    }
 
-        draw();
+    //From https://codepen.io/jlfwong/pen/GqmroZ
+    //Utility to complain loudly if we fail to find the attribute/uniform
+    function getAttribLocation(program, name) {
+        var attributeLocation = gl.getAttribLocation(program, name);
+        if (attributeLocation === -1) {
+            throw 'Cannot find attribute ' + name + '.';
+        }
+        return attributeLocation;
+    }
 
-        let a = window.Telegram.WebApp?.initData?.id
-        window.Telegram.WebApp?.expand()
-        window.Telegram.WebApp?.isFullscreen(true)
-        window.Telegram.WebApp?.requestFullscreen()
-        console.log(a)
-    </script>
-</div>
+    function getUniformLocation(program, name) {
+        var attributeLocation = gl.getUniformLocation(program, name);
+        if (attributeLocation === -1) {
+            throw 'Cannot find uniform ' + name + '.';
+        }
+        return attributeLocation;
+    }
+
+    //************** Create shaders **************
+
+    //Create vertex and fragment shaders
+    var vertexShader = compileShader(vertexSource, gl.VERTEX_SHADER);
+    var fragmentShader = compileShader(fragmentSource, gl.FRAGMENT_SHADER);
+
+    //Create shader programs
+    var program = gl.createProgram();
+    gl.attachShader(program, vertexShader);
+    gl.attachShader(program, fragmentShader);
+    gl.linkProgram(program);
+
+    gl.useProgram(program);
+
+    //Set up rectangle covering entire canvas
+    var vertexData = new Float32Array([
+        -1.0, 1.0, 	// top left
+        -1.0, -1.0, 	// bottom left
+        1.0, 1.0, 	// top right
+        1.0, -1.0, 	// bottom right
+    ]);
+
+    //Create vertex buffer
+    var vertexDataBuffer = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexDataBuffer);
+    gl.bufferData(gl.ARRAY_BUFFER, vertexData, gl.STATIC_DRAW);
+
+    // Layout of our data in the vertex buffer
+    var positionHandle = getAttribLocation(program, 'position');
+
+    gl.enableVertexAttribArray(positionHandle);
+    gl.vertexAttribPointer(positionHandle,
+        2, 				// position is a vec2 (2 values per component)
+        gl.FLOAT, // each component is a float
+        false, 		// don't normalize values
+        2 * 4, 		// two 4 byte float components per vertex (32 bit float is 4 bytes)
+        0 				// how many bytes inside the buffer to start from
+    );
+
+    //Set uniform handle
+    var timeHandle = getUniformLocation(program, 'time');
+    var widthHandle = getUniformLocation(program, 'width');
+    var heightHandle = getUniformLocation(program, 'height');
+
+    gl.uniform1f(widthHandle, window.innerWidth);
+    gl.uniform1f(heightHandle, window.innerHeight);
+
+    var lastFrame = Date.now();
+    var thisFrame;
+
+    function draw() {
+
+        //Update time
+        thisFrame = Date.now();
+        time += (thisFrame - lastFrame) / 770;
+        lastFrame = thisFrame;
+
+        //Send uniforms to program
+        gl.uniform1f(timeHandle, time);
+        //Draw a triangle strip connecting vertices 0-4
+        gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+
+        requestAnimationFrame(draw);
+    }
+
+    draw();
+
+    let a = window.Telegram.WebApp?.initData?.id
+    window.Telegram.WebApp?.expand()
+    window.Telegram.WebApp?.isFullscreen(true)
+    window.Telegram.WebApp?.requestFullscreen()
+    console.log(a)
+</script>
 
 
 </body>
