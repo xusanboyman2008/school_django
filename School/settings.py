@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'School.wsgi.application'
 
 DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3', 'NAME': BASE_DIR / 'db.sqlite3', }}
 # database_url = os.environ.get('DATABASE_URL')
-database_url = 'postgresql://school_api_3_user:lIlmLBoVtBcD6yqJ3AAIFVPsFgi5GkQy@dpg-cuaqparqf0us73cat8fg-a.oregon-postgres.render.com/school_api_3'
+database_url = 'postgresql://neondb_owner:npg_RkIy9Ctf5bph@ep-fragrant-butterfly-a8t65nyw-pooler.eastus2.azure.neon.tech/neondb'
 DATABASES['default'] = dj_database_url.parse(database_url)
 
 
